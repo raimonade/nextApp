@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import s from './UserScreen.module.scss';
-import People from './assets/svgs/users.svg';
-import Hexagon from './assets/svgs/hexagon.svg';
-import Pedestrian from './assets/svgs/walking.svg';
-import Hand from './assets/svgs/hand-paper.svg';
+import People from 'assets/svgs/users.svg';
+import Hexagon from 'assets/svgs/hexagon.svg';
+import Pedestrian from 'assets/svgs/walking.svg';
+import Hand from 'assets/svgs/hand-paper.svg';
 import axios from 'axios';
+import Link from 'next/link';
 
 const UserScreen = ({ apiData }) => {
 	const [resp, setresp] = useState({});
@@ -21,10 +22,10 @@ const UserScreen = ({ apiData }) => {
 
 	// On Component Mount
 	useEffect(() => {
-		// axios.get('http://localhost:5000/firstboot');
+		axios.get('http://localhost:5000/firstboot');
 		window.addEventListener('keydown', onKeydown);
 		// On component unmount
-		timeout = setInterval(() => getCameraData(), 333);
+		timeout = setTimeout(() => getCameraData(), 333);
 		return () => {
 			window.removeEventListener('keydown', onKeydown);
 			clearTimeout(timeout);
@@ -66,11 +67,9 @@ const UserScreen = ({ apiData }) => {
 			return;
 		}
 		allowedSound.current.play();
-
 	}
 
 	function onSuccess(res) {
-		
 		const all = res.MaxPeople - res.PeopleCount > 0;
 
 		if (allowedRef.current !== all) {
@@ -78,7 +77,7 @@ const UserScreen = ({ apiData }) => {
 			setAllowed(all);
 		}
 		setresp(res);
-		
+
 		timeout = setTimeout(() => getCameraData(), 333);
 	}
 
@@ -92,7 +91,11 @@ const UserScreen = ({ apiData }) => {
 			<audio ref={notAllowedSound} src="sounds/VeikalsPilns.wav"></audio>
 
 			<div className={s.PeopleCount}>
-				<People />
+				<Link href="/settings">
+					<a>
+						<People />
+					</a>
+				</Link>
 				<span>
 					{resp.PeopleCount > 0 ? resp.PeopleCount : 0} / {resp.MaxPeople}
 				</span>

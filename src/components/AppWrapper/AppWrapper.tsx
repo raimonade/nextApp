@@ -1,10 +1,9 @@
 import React from 'react'
-import PeopleCounter from '../PeopleCounter/PeopleCounter';
 import s from './AppWrapper.module.scss'
-const AppWrapper = () => {
+const AppWrapper = ({children}) => {
   return (
     <div className={s.Wrapper}>
-      <PeopleCounter/>
+      {children}
     </div>
   )
 }

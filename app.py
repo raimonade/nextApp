@@ -2,9 +2,8 @@ import requests
 import json
 from requests.auth import HTTPDigestAuth
 from flask_cors import CORS
-from gevent.pywsgi import WSGIServer
-from flask import jsonify
-from flask import Flask
+#from gevent.pywsgi import WSGIServer
+from flask import jsonify, Flask, request
 import os
 
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
@@ -24,48 +23,121 @@ summary.UTC=1615580510"""
 app = Flask(__name__)
 CORS(app)
 
+# First Api call (get people count)
+url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
+# Second Api call (reset camera people count to 0)
+clearUrl = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=clearSectionStat&'
+# Variable to fix the camera bug
+# shambles = 0
+SettingsFile = 'settings.json'
+
+
+
+
+def write_json(data, filename=SettingsFile):
+    with open(filename, 'w') as f:
+        json.dump(data, f)
+
+
+app = Flask(__name__)
+CORS(app)
+
 
 @app.route('/')
 def getDahua():
-    # Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
+    def getData():
+        MaxPeople = 1
+        Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
 
-    # Turns all values to a list of lines
-    # DahuaValues = Dahua.text.splitlines()
-    # DahuaValues = exampleData.text.splitlines()
-    DahuaValues = exampleData.splitlines()
+        with open(SettingsFile, 'r') as openfile:
+            Item = json.load(openfile)
+            MaxPeople = Item['MaxPeople']
 
-    # Total of people entered today:
-    PeopleInString = DahuaValues[2]
-    PeopleIn = int(PeopleInString.split("=", 1)[1])
+        # Turns all values to a list of lines
+        DahuaValues = Dahua.text.splitlines()
+        # DahuaValues = exampleData.splitlines()
+        # DahuaValues = exampleData.splitlines()
 
-    # Total number of people exited today:
-    PeopleOutString = DahuaValues[6]
-    PeopleOut = int(PeopleOutString.split("=", 1)[1])
+        # Total of people entered today:
+        PeopleInString = DahuaValues[4]
+        PeopleIn = int(PeopleInString.split("=", 1)[1])
 
-    # Total number of people inside right now:
-    PeopleCount = PeopleIn - PeopleOut
-    # print(PeopleCount)
+        # Total number of people exited today:
+        PeopleOutString = DahuaValues[8]
+        PeopleOut = int(PeopleOutString.split("=", 1)[1])
 
-    # Number of people still allowed to enter
-    MaxPeople = 1
-    AllowedToEnter = MaxPeople - PeopleCount
+        # Total number of people inside right now + bug fix
+        PeopleCount = PeopleIn - PeopleOut
 
-    # print('Allowed to Enter:', AllowedToEnter)
+        # Number of people still allowed to enter
+        AllowedToEnter = MaxPeople - PeopleCount
 
-    # Return peopleCount, people in, people out
-    res = jsonify(PeopleIn=PeopleIn, PeopleOut=PeopleOut,
-                  PeopleCount=PeopleCount, MaxPeople=MaxPeople)
+        # Return peopleCount, people in, people out
+        res = {"PeopleIn": PeopleIn, "PeopleOut": PeopleOut,
+               "PeopleCount": PeopleCount, "MaxPeople": MaxPeople}
+
+        return res
+
+    data = getData()
+
+    if data["PeopleCount"] < 0:
+        requests.get(clearUrl, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
+        data = jsonify(getData())
+        data.status_code = 200
+        return data
+
+    data = jsonify(getData())
+    data.status_code = 200
+    return data
+
+
+@app.route('/firstboot')
+def fixDahua():
+    requests.get(clearUrl, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
+    res = jsonify('success')
     res.status_code = 200
-
     return res
 
 
-@app.route('/exit')
-def killApp():
-    os._exit(0)
-    return
+@app.route('/changeVals', methods=['POST'])
+def changeVals():
+    num = request.json['maxPeople']
+    write_json({"MaxPeople": num})
+    return jsonify('success'), 200
 
 
-if __name__ == "__main__":
-    http_server = WSGIServer(('', 5000), app)
-    http_server.serve_forever()
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+# #Fix the peoplecounting bug on first launch, call only once
+# @app.route('/firstboot')
+# def fixDahua():
+
+#     global shambles
+
+#     Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
+
+#     # Turns all values to a list of lines
+#     DahuaValues = Dahua.text.splitlines()
+#     # DahuaValues = exampleData.text.splitlines()
+#     # DahuaValues = exampleData.splitlines()
+
+#     # Total of people entered today:
+#     PeopleInString = DahuaValues[4]
+#     PeopleIn = int(PeopleInString.split("=", 1)[1])
+
+#     # Total number of people exited today:
+#     PeopleOutString = DahuaValues[8]
+#     PeopleOut = int(PeopleOutString.split("=", 1)[1])
+
+#     # Total number of people inside right now + bug fix
+#     PeopleCount = PeopleIn - PeopleOut
+
+#     #Fix people counting bug
+#     if PeopleCount < 0:
+
+#         shambles = -PeopleCount
+#     res = jsonify('success')
+#     res.status_code = 200
+#     return res
