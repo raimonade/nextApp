@@ -2,7 +2,6 @@ import requests
 import json
 from requests.auth import HTTPDigestAuth
 from flask_cors import CORS
-#from gevent.pywsgi import WSGIServer
 from flask import jsonify, Flask, request, render_template, send_from_directory
 import os
 
@@ -39,7 +38,7 @@ CORS(app)
 
 from pyfladesk import init_gui
 
-
+# Web View Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -114,36 +113,3 @@ def changeVals():
 if __name__ == '__main__':
     init_gui(app, 5000)
     # app.run(debug=True)
-
-
-# #Fix the peoplecounting bug on first launch, call only once
-# @app.route('/firstboot')
-# def fixDahua():
-
-#     global shambles
-
-#     Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
-
-#     # Turns all values to a list of lines
-#     DahuaValues = Dahua.text.splitlines()
-#     # DahuaValues = exampleData.text.splitlines()
-#     # DahuaValues = exampleData.splitlines()
-
-#     # Total of people entered today:
-#     PeopleInString = DahuaValues[4]
-#     PeopleIn = int(PeopleInString.split("=", 1)[1])
-
-#     # Total number of people exited today:
-#     PeopleOutString = DahuaValues[8]
-#     PeopleOut = int(PeopleOutString.split("=", 1)[1])
-
-#     # Total number of people inside right now + bug fix
-#     PeopleCount = PeopleIn - PeopleOut
-
-#     #Fix people counting bug
-#     if PeopleCount < 0:
-
-#         shambles = -PeopleCount
-#     res = jsonify('success')
-#     res.status_code = 200
-#     return res

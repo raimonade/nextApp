@@ -1,24 +1,34 @@
 {
-  "name": "nextapp",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "export": "next build && next export",
-    "start": "next start"
-  },
-  "dependencies": {
-    "axios": "^0.21.1",
-    "next": "10.1.3",
-    "next-fonts": "^1.5.1",
-    "next-plugin-svgr": "^1.0.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "sass": "^1.32.8",
-    "typescript": "^4.2.4"
-  },
-  "devDependencies": {
-    "@types/react": "^17.0.3"
-  }
+	"name": "nextapp",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"export": "next build && next export",
+		"start": "next start",
+		"build:macos": "./venv-pywebview/bin/python build-macos.py py2app",
+		"build:linux": "./venv-pywebview/bin/pyinstaller build-linux.spec --onefile",
+		"clean": "run-script-os",
+		"clean:default": "rm -rf dist 2>/dev/null; rm -rf gui 2>/dev/null; rm -rf build 2>/dev/null; ",
+		"init": "npm install && run-script-os",
+		"init:linux": "virtualenv -p python3 venv-pywebview && if [[ -z \"${KDE_FULL_SESSION}\" ]]; then npm run init:qt5; else npm run init:gtk; fi",
+		"init:default": "virtualenv -p python3 venv-pywebview && ./venv-pywebview/bin/pip install -r requirements.txt",
+		"init:qt5": "./venv-pywebview/bin/pip install pyqt5 -r requirements.txt",
+		"init:gtk": "sudo apt install libgirepository1.0-dev gcc libcairo2-dev pkg-config python3-dev gir1.2-gtk-3.0 && ./venv-pywebview/bin/pip install pycairo pygobject -r requirements.txt"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"next": "10.1.3",
+		"next-fonts": "^1.5.1",
+		"next-plugin-svgr": "^1.0.0",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"sass": "^1.32.8",
+		"typescript": "^4.2.4"
+	},
+	"devDependencies": {
+		"@types/react": "^17.0.3",
+		"run-script-os": "1.0.7"
+	}
 }
