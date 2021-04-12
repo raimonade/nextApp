@@ -9,7 +9,7 @@
     display: grid;
     place-content: center;
 
-    &[allowed="false"]{
+    &[data-allowed="false"]{
         background-color: var(--red);
     }
 }

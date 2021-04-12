@@ -7,8 +7,8 @@ import Hand from 'assets/svgs/hand-paper.svg';
 import axios from 'axios';
 import Link from 'next/link';
 
-const UserScreen = ({ apiData }) => {
-	const [resp, setresp] = useState({});
+const UserScreen = () => {
+	const [resp, setresp] = useState({} as any);
 	const [allowed, _setAllowed] = useState(false);
 	let timeout = null;
 	const allowedRef = React.useRef(allowed);
@@ -46,7 +46,7 @@ const UserScreen = ({ apiData }) => {
 		setSound();
 	}
 
-	function getCameraData(url = 'http://localhost:5000') {
+	function getCameraData(url = 'http://localhost:5000/api') {
 		// tas pats fetch requests, tikai ar moduli
 		// kuram labaks error handlings utt,
 		// bet ideja nemainas
@@ -86,7 +86,7 @@ const UserScreen = ({ apiData }) => {
 	}
 
 	return (
-		<div className={s.Screen} allowed={allowed.toString()}>
+		<div className={s.Screen} data-allowed={allowed.toString()}>
 			<audio ref={allowedSound} src="sounds/ding.mp3"></audio>
 			<audio ref={notAllowedSound} src="sounds/VeikalsPilns.wav"></audio>
 

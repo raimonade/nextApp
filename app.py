@@ -3,7 +3,7 @@ import json
 from requests.auth import HTTPDigestAuth
 from flask_cors import CORS
 #from gevent.pywsgi import WSGIServer
-from flask import jsonify, Flask, request
+from flask import jsonify, Flask, request, render_template, send_from_directory
 import os
 
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
@@ -20,8 +20,6 @@ summary.InsideSubtotal.Total=12
 summary.RuleName=NumberStat
 summary.UTC=1615580510"""
 
-app = Flask(__name__)
-CORS(app)
 
 # First Api call (get people count)
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
@@ -31,31 +29,38 @@ clearUrl = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=clearSection
 # shambles = 0
 SettingsFile = 'settings.json'
 
-
-
-
 def write_json(data, filename=SettingsFile):
     with open(filename, 'w') as f:
         json.dump(data, f)
 
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='out', static_folder='out/', static_url_path='')
 CORS(app)
+
+from pyfladesk import init_gui
 
 
 @app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/api')
 def getDahua():
     def getData():
         MaxPeople = 1
-        Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
+        # Dahua = requests.get(url, auth=HTTPDigestAuth('admin', 'Lupata1488*'))
 
         with open(SettingsFile, 'r') as openfile:
             Item = json.load(openfile)
             MaxPeople = Item['MaxPeople']
 
         # Turns all values to a list of lines
-        DahuaValues = Dahua.text.splitlines()
-        # DahuaValues = exampleData.splitlines()
+        # DahuaValues = Dahua.text.splitlines()
+        DahuaValues = exampleData.splitlines()
         # DahuaValues = exampleData.splitlines()
 
         # Total of people entered today:
@@ -107,7 +112,8 @@ def changeVals():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    init_gui(app, 5000)
+    # app.run(debug=True)
 
 
 # #Fix the peoplecounting bug on first launch, call only once
