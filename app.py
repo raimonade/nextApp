@@ -4,6 +4,7 @@ from requests.auth import HTTPDigestAuth
 from flask_cors import CORS
 from flask import jsonify, Flask, request, render_template, send_from_directory
 import os
+import sys
 
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
 exampleData = """summary.Channel=0
@@ -26,14 +27,29 @@ url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channe
 clearUrl = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=clearSectionStat&'
 # Variable to fix the camera bug
 # shambles = 0
-SettingsFile = 'settings.json'
+
+# Define function to import external files when using PyInstaller.
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+SettingsFile = resource_path('settings.json')
 
 def write_json(data, filename=SettingsFile):
     with open(filename, 'w') as f:
         json.dump(data, f)
 
 
-app = Flask(__name__, template_folder='out', static_folder='out/', static_url_path='')
+
+
+app = Flask(__name__, template_folder=resource_path('out/'), static_folder=resource_path('out/'), static_url_path='')
 CORS(app)
 
 from pyfladesk import init_gui

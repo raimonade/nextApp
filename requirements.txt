@@ -1,7 +1,8 @@
 setuptools
 pywebview
-pyinstaller; sys_platform != 'darwin'
-py2app; sys_platform == 'darwin'
+pyinstaller
+py2app
 requests
 flask_cors
 flask
+PyQt5==5.11.3

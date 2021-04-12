@@ -3,10 +3,11 @@
 block_cipher = None
 
 added_files = [
-    ('./gui', 'gui'),
+    ('./out', 'out'),
+    ('./settings.json', '.')
 ]
 
-a = Analysis(['./src/index.py'],
+a = Analysis(['./app.py'],
              pathex=['./dist'],
              binaries=None,
              datas=added_files,
@@ -19,16 +20,16 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
-          name='pywebview-react-app',
-          debug=False,
+          name='recount-peoplecounter',
+          debug=True,
           strip=True,
           #icon='./src/assets/\logo.ico',
           upx=True,
-          console=False ) # set this to see error output of the executable
+          console=True ) # set this to see error output of the executable
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
                upx=False,
-               name='pywebview-react-app')
+               name='recount-peoplecounter')

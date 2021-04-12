@@ -15,14 +15,14 @@ if os.path.exists('build'):
 if os.path.exists('dist/index.app'):
     shutil.rmtree('dist/index.app')
 
-ENTRY_POINT = ['src/index.py']
+ENTRY_POINT = ['app.py']
 
 DATA_FILES = tree('dist')
 OPTIONS = {
     'argv_emulation': False,
     'strip': True,
     'iconfile': 'src/assets/logo.icns',
-    'includes': ['WebKit', 'Foundation', 'webview', 'pkg_resources.py2_warn']
+    'includes': ['WebKit', 'Foundation', 'PyQt5','flask', 'flask_cors', 'pkg_resources.py2_warn']
 }
 
 setup(

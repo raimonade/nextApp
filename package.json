@@ -10,7 +10,7 @@
 		"build:macos": "./venv-pywebview/bin/python build-macos.py py2app",
 		"build:linux": "./venv-pywebview/bin/pyinstaller build-linux.spec --onefile",
 		"clean": "run-script-os",
-		"clean:default": "rm -rf dist 2>/dev/null; rm -rf gui 2>/dev/null; rm -rf build 2>/dev/null; ",
+		"clean:default": "rm -rf dist 2>/dev/null; rm -rf out 2>/dev/null; rm -rf build 2>/dev/null; ",
 		"init": "npm install && run-script-os",
 		"init:linux": "virtualenv -p python3 venv-pywebview && if [[ -z \"${KDE_FULL_SESSION}\" ]]; then npm run init:qt5; else npm run init:gtk; fi",
 		"init:default": "virtualenv -p python3 venv-pywebview && ./venv-pywebview/bin/pip install -r requirements.txt",
