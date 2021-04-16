@@ -14,7 +14,7 @@ const SettingsScreen = () => {
 		setstatus(false);
 		setsent(false);
 		axios
-			.post('http://localhost:5000/changeVals', {
+			.post('/changeVals', {
 				maxPeople: number,
 			})
 			.then(() => onSuccess())

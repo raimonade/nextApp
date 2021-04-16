@@ -22,7 +22,7 @@ const UserScreen = () => {
 
 	// On Component Mount
 	useEffect(() => {
-		axios.get('http://localhost:5000/firstboot');
+		axios.get('/firstboot');
 		window.addEventListener('keydown', onKeydown);
 		// On component unmount
 		timeout = setTimeout(() => getCameraData(), 333);
@@ -46,7 +46,7 @@ const UserScreen = () => {
 		setSound();
 	}
 
-	function getCameraData(url = 'http://localhost:5000/api') {
+	function getCameraData(url = '/api') {
 		// tas pats fetch requests, tikai ar moduli
 		// kuram labaks error handlings utt,
 		// bet ideja nemainas

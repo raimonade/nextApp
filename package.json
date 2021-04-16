@@ -8,7 +8,7 @@
 		"export": "next build && next export",
 		"start": "next start",
 		"build:macos": "./venv-pywebview/bin/python build-macos.py py2app",
-		"build:linux": "./venv-pywebview/bin/pyinstaller build-linux.spec --onefile",
+		"build:linux": "./venv-pywebview/bin/pyinstaller build-linux.spec -F -w",
 		"clean": "run-script-os",
 		"clean:default": "rm -rf dist 2>/dev/null; rm -rf out 2>/dev/null; rm -rf build 2>/dev/null; ",
 		"init": "npm install && run-script-os",

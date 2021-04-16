@@ -5,6 +5,8 @@ from flask_cors import CORS
 from flask import jsonify, Flask, request, render_template, send_from_directory
 import os
 import sys
+import threading
+import webview as gui
 
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
 exampleData = """summary.Channel=0
@@ -48,11 +50,8 @@ def write_json(data, filename=SettingsFile):
 
 
 
-
 app = Flask(__name__, template_folder=resource_path('out/'), static_folder=resource_path('out/'), static_url_path='')
 CORS(app)
-
-from pyfladesk import init_gui
 
 # Web View Routes
 @app.route('/')
@@ -125,7 +124,17 @@ def changeVals():
     write_json({"MaxPeople": num})
     return jsonify('success'), 200
 
+def runApp():
+    app.run()
+
+def runEEl():
+    gui.create_window('testapp','out/index.html')
+    gui.start(gui='gtk')
+
 
 if __name__ == '__main__':
-    init_gui(app, 5000)
-    # app.run(debug=True)
+    # init_gui(app, 5000)
+    gui.create_window('testapp',app)
+    gui.start(gui='gtk')
+
+
