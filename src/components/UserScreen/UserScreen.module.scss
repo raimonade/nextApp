@@ -5,9 +5,10 @@
 	padding: var(--paddingY) var(--paddingX);
 	background-color: var(--green);
     transition: all 0.25s;
-
+	transform:translateZ(0);
     display: grid;
     place-content: center;
+	will-change:background-color;
 
     &[data-allowed="false"]{
         background-color: var(--red);

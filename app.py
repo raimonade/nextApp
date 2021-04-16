@@ -7,6 +7,7 @@ import os
 import sys
 import threading
 import webview as gui
+# from gevent.pywsgi import WSGIServer
 
 url = 'http://192.168.1.108/cgi-bin/videoStatServer.cgi?action=getSummary&channel=1'
 exampleData = """summary.Channel=0
@@ -125,7 +126,7 @@ def changeVals():
     return jsonify('success'), 200
 
 def runApp():
-    app.run()
+    app.run(host="0.0.0.0", port=8000)
 
 def runEEl():
     gui.create_window('testapp','out/index.html')
@@ -134,7 +135,13 @@ def runEEl():
 
 if __name__ == '__main__':
     # init_gui(app, 5000)
-    gui.create_window('testapp',app)
-    gui.start(gui='gtk')
+    # gui.create_window('testapp',app)
+    # gui.start(gui='gtk')
+    t = threading.Thread(target=runApp)
+    t.daemon = True
+    t.start()
 
+    gui.create_window("Re:count","http://localhost:8000/")
+    gui.start()
+    sys.exit()
 
