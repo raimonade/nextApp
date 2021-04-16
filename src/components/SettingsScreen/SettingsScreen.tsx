@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import s from './SettingsScreen.module.scss';
-import BackArrow from 'assets/svgs/back.svg';
-import Link from 'next/link';
+import {Link} from 'preact-router/match';
 import axios from 'axios';
+import { h } from 'preact';
+import BackArrow from '../../assets/svgs/back';
 
 const SettingsScreen = () => {
 	const [number, setnumber] = useState(0);
 	const [status, setstatus] = useState(false);
 	const [sent, setsent] = useState(false);
-	let timeout;
+	let timeout:NodeJS.Timeout;
 
 	const postSettings = () => {
 		setstatus(false);
@@ -35,7 +36,7 @@ const SettingsScreen = () => {
 		setsent(true)
 	}
 
-	function parsenum(evt) {
+	function parsenum(evt:KeyboardEvent) {
 		if ((evt.which != 8 && evt.which != 0 && evt.which < 48) || evt.which > 57) {
 			evt.preventDefault();
 		}
@@ -54,7 +55,7 @@ const SettingsScreen = () => {
 						<label htmlFor="">Ievadiet maksimālo cilvēku skaitu</label>
 						<input
 							type="number"
-							onChange={(e) => setnumber(Number(e.target.value))}
+							onChange={(e:any) => setnumber(Number(e.target?.value || 0))}
 							onKeyPress={(e) => parsenum(e)}
 						/>
 					</div>
@@ -70,7 +71,7 @@ const SettingsScreen = () => {
 							{status ? 'Izmaiņas saglabātas' : 'Izmaiņas netika saglabātas'}
 						</span>
 					) : (
-						<></>
+						null
 					)}
 				</div>
 			</div>

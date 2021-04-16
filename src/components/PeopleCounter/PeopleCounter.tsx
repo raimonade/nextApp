@@ -1,6 +1,6 @@
-import React from 'react';
-import s from './PeopleCounter.module.scss';
+import s from './PeopleCounter.scss';
 import UserScreen from '../UserScreen/UserScreen';
+import { h } from 'preact';
 
 const PeopleCounter = () => {
   return (

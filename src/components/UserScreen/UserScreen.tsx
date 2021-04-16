@@ -1,24 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
-import s from './UserScreen.module.scss';
-import People from 'assets/svgs/users.svg';
-import Hexagon from 'assets/svgs/hexagon.svg';
-import Pedestrian from 'assets/svgs/walking.svg';
-import Hand from 'assets/svgs/hand-paper.svg';
+import People from '../../assets/svgs/users';
+import Hexagon from '../../assets/svgs/hexagon';
+import Pedestrian from '../../assets/svgs/walking';
+import Hand from '../../assets/svgs/hand-paper';
 import axios from 'axios';
-import Link from 'next/link';
+import { Fragment, h, FunctionalComponent } from 'preact';
+import { Link } from 'preact-router/match';
+import s from './UserScreen.module.scss';
+import { a, useSpring } from 'react-spring';
 
-const UserScreen = () => {
+const colors = {
+	green: '#0DB246',
+	red: '#EA3232',
+};
+
+const UserScreen: FunctionalComponent = () => {
 	const [resp, setresp] = useState({} as any);
 	const [allowed, _setAllowed] = useState(false);
-	let timeout = null;
+	let timeout: NodeJS.Timeout;
 	const allowedRef = React.useRef(allowed);
-	const setAllowed = (data) => {
+	const setAllowed = (data: boolean) => {
 		allowedRef.current = data;
 		_setAllowed(data);
 	};
 
 	const allowedSound = useRef(null);
 	const notAllowedSound = useRef(null);
+	const background = useSpring({
+		backgroundColor: allowed ? colors.green : colors.red,
+		config: {
+			duration:0.3
+		},
+	});
 
 	// On Component Mount
 	useEffect(() => {
@@ -32,7 +45,7 @@ const UserScreen = () => {
 		};
 	}, []);
 
-	function onKeydown(e) {
+	function onKeydown(e: KeyboardEvent) {
 		switch (e.key) {
 			case 'ArrowLeft':
 				setAllowed(false);
@@ -57,19 +70,25 @@ const UserScreen = () => {
 	}
 
 	function setSound(isAllowed = allowedRef.current) {
+		// @ts-ignore
 		notAllowedSound.current.currentTime = 0;
+		// @ts-ignore
 		notAllowedSound.current.pause();
+		// @ts-ignore
 		allowedSound.current.pause();
+		// @ts-ignore
 		allowedSound.current.currentTime = 0;
 
 		if (!isAllowed) {
+			// @ts-ignore
 			notAllowedSound.current.play();
 			return;
 		}
+		// @ts-ignore
 		allowedSound.current.play();
 	}
 
-	function onSuccess(res) {
+	function onSuccess(res: any) {
 		const all = res.MaxPeople - res.PeopleCount > 0;
 
 		if (allowedRef.current !== all) {
@@ -81,12 +100,12 @@ const UserScreen = () => {
 		timeout = setTimeout(() => getCameraData(), 333);
 	}
 
-	function onError(err) {
+	function onError(err: any) {
 		clearTimeout(timeout);
 	}
 
 	return (
-		<div className={s.Screen} data-allowed={allowed.toString()}>
+		<a.div className={s.Screen} style={background}>
 			<audio ref={allowedSound} src="sounds/ding.mp3"></audio>
 			<audio ref={notAllowedSound} src="sounds/VeikalsPilns.wav"></audio>
 
@@ -105,15 +124,15 @@ const UserScreen = () => {
 					{allowed ? (
 						<Pedestrian />
 					) : (
-						<>
+						<Fragment>
 							<Hexagon />
 							<Hand className={s.Hand} />
-						</>
+						</Fragment>
 					)}
 				</div>
 				<h1>{allowed ? 'IEEJA ATĻAUTA' : 'IEEJA AIZLIEGTA'}</h1>
 			</div>
-		</div>
+		</a.div>
 	);
 };
 

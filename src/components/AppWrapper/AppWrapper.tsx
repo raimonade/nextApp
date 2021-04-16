@@ -1,11 +1,12 @@
-import React from 'react'
-import s from './AppWrapper.module.scss'
-const AppWrapper = ({children}) => {
-  return (
-    <div className={s.Wrapper}>
-      {children}
-    </div>
-  )
-}
+import s from './AppWrapper.scss';
+import type { ComponentChildren } from 'preact';
+import { h } from 'preact';
 
-export default AppWrapper
+type Props = {
+	children: ComponentChildren;
+};
+const AppWrapper = ({ children }: Props) => {
+	return <div className={s.Wrapper}>{children}</div>;
+};
+
+export default AppWrapper;
