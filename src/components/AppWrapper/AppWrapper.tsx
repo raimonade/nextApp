@@ -1,4 +1,4 @@
-import s from './AppWrapper.scss';
+import s from './AppWrapper.css';
 import type { ComponentChildren } from 'preact';
 import { h } from 'preact';
 

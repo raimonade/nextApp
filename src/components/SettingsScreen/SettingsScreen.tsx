@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import s from './SettingsScreen.module.scss';
+import s from './SettingsScreen.module.css';
 import {Link} from 'preact-router/match';
 import axios from 'axios';
 import { h } from 'preact';

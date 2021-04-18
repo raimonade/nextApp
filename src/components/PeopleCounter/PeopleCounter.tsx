@@ -1,4 +1,4 @@
-import s from './PeopleCounter.scss';
+import s from './PeopleCounter.css';
 import UserScreen from '../UserScreen/UserScreen';
 import { h } from 'preact';
 

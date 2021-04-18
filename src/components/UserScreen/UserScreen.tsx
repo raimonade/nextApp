@@ -6,7 +6,7 @@ import Hand from '../../assets/svgs/hand-paper';
 import axios from 'axios';
 import { Fragment, h, FunctionalComponent } from 'preact';
 import { Link } from 'preact-router/match';
-import s from './UserScreen.module.scss';
+import s from './UserScreen.module.css';
 import { a, useSpring } from 'react-spring';
 
 const colors = {

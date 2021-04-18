@@ -1,4 +1,4 @@
-import './style/globals.scss';
+import './style/globals.css';
 import App from './components/app';
 
 export default App;
